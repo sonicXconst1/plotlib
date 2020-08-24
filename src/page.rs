@@ -66,7 +66,6 @@ impl<'a> Page<'a> {
         let x_margin = 120; // should actually depend on y-axis label font size
         let y_margin = 60;
         let x_offset = 0.6 * f64::from(x_margin);
-        let y_offset = 0.6 * f64::from(height_per_view);
 
         let mut current_y_position: u32 = 0;
 
@@ -74,10 +73,9 @@ impl<'a> Page<'a> {
         for &view in &self.views {
             let view_group = view
                 .to_svg(f64::from(width - x_margin), f64::from(height - y_margin))?
-                .set("y", current_y_position.to_string())
                 .set(
                     "transform",
-                    format!("translate({}, {})", x_offset, f64::from(height_per_view) - y_offset),
+                    format!("translate({}, {})", x_offset, f64::from(current_y_position)),
                 );
             document.append(view_group);
             current_y_position += height_per_view;
