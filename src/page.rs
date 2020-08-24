@@ -61,10 +61,14 @@ impl<'a> Page<'a> {
         let (width, height) = self.dimensions;
         let mut document = Document::new().set("viewBox", (0, 0, width, height));
 
+        let height_per_view = height / (self.views.len() as u32);
+
         let x_margin = 120; // should actually depend on y-axis label font size
         let y_margin = 60;
         let x_offset = 0.6 * f64::from(x_margin);
-        let y_offset = 0.6 * f64::from(y_margin);
+        let y_offset = 0.6 * f64::from(height_per_view);
+
+        let mut current_y_position: u32 = 0;
 
         // TODO put multiple views in correct places
         for &view in &self.views {
@@ -72,9 +76,11 @@ impl<'a> Page<'a> {
                 .to_svg(f64::from(width - x_margin), f64::from(height - y_margin))?
                 .set(
                     "transform",
-                    format!("translate({}, {})", x_offset, f64::from(height) - y_offset),
-                );
+                    format!("translate({}, {})", x_offset, f64::from(height_per_view) - y_offset),
+                )
+                .set("y", current_y_position.to_string());
             document.append(view_group);
+            current_y_position += height_per_view;
         }
         Ok(document)
     }
