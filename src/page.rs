@@ -67,7 +67,7 @@ impl<'a> Page<'a> {
         let y_margin = 60;
         let x_offset = 0.6 * f64::from(x_margin);
 
-        let mut current_y_position: u32 = 0;
+        let mut current_y_position: u32 = height_per_view;
 
         // TODO put multiple views in correct places
         for &view in &self.views {
